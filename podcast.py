@@ -2,10 +2,12 @@
 
 import os
 import datetime
+import pydub
 
 def main():
     base = "https://wctang-data.github.io/happythreekingdoms"
     name = "歡樂三國志"
+    _now = datetime.datetime.now()
     with open("feed.xml", "w", encoding="utf-8", newline='\n') as out:
         print(f'''<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
@@ -14,7 +16,7 @@ def main():
 <itunes:image href="{base}/logo.jpg"/>
 <link>{base}/</link>
 <language/>
-<pubDate>{datetime.datetime.now()}</pubDate>
+<pubDate>{_now}</pubDate>
 <author>wctang-data</author>''', file=out)
 
         for dirpath, _, filenames in os.walk("."):
@@ -24,7 +26,8 @@ def main():
                 continue
             dirpath = dirpath[2:]
             for filename in filenames:
-                print(f'<item><title>{dirpath} {filename}</title><enclosure url="{base}/{dirpath}/{filename}" type="audio/mpeg"/></item>', file=out)
+                info = pydub.utils.mediainfo(f'{dirpath}/{filename}')
+                print(f'<item><title>{dirpath} {filename}</title><pubDate>{_now}</pubDate><enclosure url="{base}/{dirpath}/{filename}" type="audio/mpeg" length="{info["size"]}"/><itunes:duration>{int(float(info["duration"]))}</itunes:duration></item>', file=out)
 
         print('''</channel>
 </rss>''', file=out)
