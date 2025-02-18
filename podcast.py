@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 
 import os
+import datetime
 
 def main():
     base = "https://wctang-data.github.io/happythreekingdoms"
-    with open("feed.xml", "w", encoding="utf-8") as out:
-        print(f'''<!DOCTYPE html>
-<html>
-<head>
-<title>歡樂三國志</title>
-</head>
-<body>
-<h1>歡樂三國志</h1>
-<img src="{base}/logo.jpg" />
-<p>歡樂三國志</p>
-<a href="{base}/feed.xml">feed</a>
-<ul>''', file=out)
+    name = "歡樂三國志"
+    with open("feed.xml", "w", encoding="utf-8", newline='\n') as out:
+        print(f'''<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<channel>
+<title>{name}</title>
+<description>{name}</description>
+<itunes:image href="{base}/logo.jpg"/>
+<link>{base}/</link>
+<language/>
+<pubDate>{datetime.datetime.now()}</pubDate>
+<author>wctang-data</author>''', file=out)
 
         for dirpath, _, filenames in os.walk("."):
             if dirpath == ".":
@@ -24,11 +24,10 @@ def main():
                 continue
             dirpath = dirpath[2:]
             for filename in filenames:
-                print(f'<li><a href="{base}/{dirpath}/{filename}">{dirpath} {filename}</a></li>', file=out)
+                print(f'<item><title>{dirpath} {filename}</title><enclosure url="{base}/{dirpath}/{filename}" type="audio/mpeg"/></item>', file=out)
 
-        print('''</ul>
-</body>
-</html>''', file=out)
+        print('''</channel>
+</rss>''', file=out)
 
 
 if __name__ == '__main__':
