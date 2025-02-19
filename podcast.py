@@ -29,7 +29,7 @@ def main():
             dirpath = dirpath[2:]
             for filename in filenames:
                 info = pydub.utils.mediainfo(f'{dirpath}/{filename}')
-                items.append((f'{dirpath} {filename[:-4]}', f'{base}/{dirpath}/{filename}', info["size"], info["duration"]))
+                items.append((f'{dirpath} {filename[:-4]}', f'{dirpath}/{filename}', info["size"], info["duration"]))
 
         for idx, item in enumerate(items):
             print(f'<item><title>{item[0]}</title><pubDate>{_now+datetime.timedelta(days=-len(items)+idx)}</pubDate><enclosure url="{base}/{item[1]}" type="audio/mpeg" length="{item[2]}"/><itunes:duration>{int(float(item[3]))}</itunes:duration></item>', file=out)
